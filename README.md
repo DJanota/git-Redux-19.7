@@ -1,5 +1,3 @@
-# git-Redux-19.7
-
 This project was bootstrapped with Create React App.
 
 Below you will find some information on how to perform common tasks.
@@ -14,6 +12,7 @@ npm start
 npm test
 npm run build
 npm run eject
+Supported Browsers
 Supported Language Features and Polyfills
 Syntax Highlighting in the Editor
 Displaying Lint Output in the Editor
@@ -35,11 +34,13 @@ Using Global Variables
 Adding Bootstrap
 Using a Custom Theme
 Adding Flow
+Adding a Router
 Adding Custom Environment Variables
 Referencing Environment Variables in the HTML
 Adding Temporary Environment Variables In Your Shell
 Adding Development Environment Variables In .env
 Can I Use Decorators?
+Fetching Data with AJAX Requests
 Integrating with an API Backend
 Node
 Ruby on Rails
@@ -65,9 +66,13 @@ Continuous Integration
 Disabling jsdom
 Snapshot Testing
 Editor Integration
+Debugging Tests
+Debugging Tests in Chrome
+Debugging Tests in Visual Studio Code
 Developing Components in Isolation
 Getting Started with Storybook
 Getting Started with Styleguidist
+Publishing Components to npm
 Making a Progressive Web App
 Opting Out of Caching
 Offline-First Considerations
@@ -94,6 +99,7 @@ npm run build exits too early
 npm run build fails on Heroku
 npm run build fails to minify
 Moment.js locales are missing
+Alternatives to Ejecting
 Something Missing?
 Updating to New Releases
 Create React App is divided into two packages:
@@ -177,6 +183,11 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use eject. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+Supported Browsers
+By default, the generated project uses the latest version of React.
+
+You can refer to the React documentation for more information about supported browsers.
+
 Supported Language Features and Polyfills
 This project supports a superset of the latest JavaScript standard.
 In addition to ES6 syntax features, it also supports:
@@ -197,6 +208,8 @@ Object.assign() via object-assign.
 Promise via promise.
 fetch() via whatwg-fetch.
 If you use any other ES6+ features that need runtime support (such as Array.from() or Symbol), make sure you are including the appropriate polyfills manually, or that the browsers you are targeting already support them.
+
+Also note that using some newer syntax features like for...of or [...nonArrayValue] causes Babel to emit code that depends on ES6 runtime features and might not work without a polyfill. When in doubt, use Babel REPL to see what any specific syntax compiles down to.
 
 Syntax Highlighting in the Editor
 To configure the syntax highlighting in your favorite text editor, head to the relevant Babel documentation page and follow the instructions. Some of the most popular editors are covered.
@@ -292,7 +305,7 @@ Next we add a 'lint-staged' field to the package.json, for example:
 +   ]
 + },
   "scripts": {
-Now, whenever you make a commit, Prettier will format the changed files automatically. You can also run ./node_modules/.bin/prettier --single-quote --write "src/**/*.{js,jsx}" to format your entire project for the first time.
+Now, whenever you make a commit, Prettier will format the changed files automatically. You can also run ./node_modules/.bin/prettier --single-quote --write "src/**/*.{js,jsx,json,css}" to format your entire project for the first time.
 
 Next you might want to integrate Prettier in your favorite editor. Read the section on Editor Integration on the Prettier GitHub page.
 
@@ -393,6 +406,8 @@ You can also use it with async / await syntax if you prefer it.
 
 With React Router
 If you are using React Router check out this tutorial on how to use code splitting with it. You can find the companion GitHub repository here.
+
+Also check out the Code Splitting section in React documentation.
 
 Adding a Stylesheet
 This project setup uses Webpack for handling all assets. Webpack offers a custom way of “extending” the concept of import beyond JavaScript. To express that a JavaScript file depends on a CSS file, you need to import the CSS from the JavaScript file:
@@ -647,6 +662,19 @@ Now you can run npm run flow (or yarn flow) to check the files for type errors. 
 
 To learn more about Flow, check out its documentation.
 
+Adding a Router
+Create React App doesn't prescribe a specific routing solution, but React Router is the most popular one.
+
+To add it, run:
+
+npm install --save react-router-dom
+Alternatively you may use yarn:
+
+yarn add react-router-dom
+To try it, delete all the code in src/App.js and replace it with any of the examples on its website. The Basic Example is a good place to get started.
+
+Note that you may need to configure your production server to support client-side routing before deploying your app.
+
 Adding Custom Environment Variables
 Note: this feature is available with react-scripts@0.2.3 and higher.
 
@@ -707,9 +735,11 @@ Adding Temporary Environment Variables In Your Shell
 Defining environment variables can vary between OSes. It’s also important to know that this manner is temporary for the life of the shell session.
 
 Windows (cmd.exe)
-set REACT_APP_SECRET_CODE=abcdef&&npm start
-(Note: the lack of whitespace is intentional.)
+set "REACT_APP_SECRET_CODE=abcdef" && npm start
+(Note: Quotes around the variable assignment are required to avoid a trailing whitespace.)
 
+Windows (Powershell)
+($env:REACT_APP_SECRET_CODE = "abcdef") -and (npm start)
 Linux, macOS (Bash)
 REACT_APP_SECRET_CODE=abcdef npm start
 Adding Development Environment Variables In .env
@@ -718,6 +748,8 @@ Note: this feature is available with react-scripts@0.5.0 and higher.
 To define permanent environment variables, create a file called .env in the root of your project:
 
 REACT_APP_SECRET_CODE=abcdef
+Note: You must create custom environment variables beginning with REACT_APP_. Any other variables except NODE_ENV will be ignored to avoid accidentally exposing a private key on the machine that could have the same name. Changing any environment variables will require you to restart the development server if it is running.
+
 .env files should be checked into source control (with the exclusion of .env*.local).
 
 What other .env files can be used?
@@ -737,6 +769,21 @@ Please refer to the dotenv documentation for more details.
 
 Note: If you are defining environment variables for development, your CI and/or hosting platform will most likely need these defined as well. Consult their documentation how to do this. For example, see the documentation for Travis CI or Heroku.
 
+Expanding Environment Variables In .env
+Note: this feature is available with react-scripts@1.1.0 and higher.
+
+Expand variables already on your machine for use in your .env file (using dotenv-expand).
+
+For example, to get the environment variable npm_package_version:
+
+REACT_APP_VERSION=$npm_package_version
+# also works:
+# REACT_APP_VERSION=${npm_package_version}
+Or expand variables local to the current .env file:
+
+DOMAIN=www.example.com
+REACT_APP_FOO=$DOMAIN/foo
+REACT_APP_BAR=$DOMAIN/bar
 Can I Use Decorators?
 Many popular libraries use decorators in their documentation.
 Create React App doesn’t support decorator syntax at the moment because:
@@ -750,6 +797,15 @@ Please refer to these two threads for reference:
 #214
 #411
 Create React App will add decorator support when the specification advances to a stable stage.
+
+Fetching Data with AJAX Requests
+React doesn't prescribe a specific approach to data fetching, but people commonly use either a library like axios or the fetch() API provided by the browser. Conveniently, Create React App includes a polyfill for fetch() so you can use it without worrying about the browser support.
+
+The global fetch function allows to easily makes AJAX requests. It takes in a URL as an input and returns a Promise that resolves to a Response object. You can find more information about fetch here.
+
+This project also includes a Promise polyfill which provides a full implementation of Promises/A+. A Promise represents the eventual result of an asynchronous operation, you can find more information about Promises here and here. Both axios and fetch() use Promises under the hood. You can also use the async / await syntax to reduce the callback nesting.
+
+You can learn more about making AJAX requests from React components in the FAQ entry on the React website.
 
 Integrating with an API Backend
 These tutorials will help you to integrate your app with an API backend running on another port, using fetch() to access it.
@@ -893,6 +949,8 @@ To do this, set the HTTPS environment variable to true, then start the dev serve
 
 Windows (cmd.exe)
 set HTTPS=true&&npm start
+Windows (Powershell)
+($env:HTTPS = $true) -and (npm start)
 (Note: the lack of whitespace is intentional.)
 
 Linux, macOS (Bash)
@@ -994,7 +1052,7 @@ it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<App />, div);
 });
-This test mounts a component and makes sure that it didn’t throw during rendering. Tests like this provide a lot value with very little effort so they are great as a starting point, and this is the test you will find in src/App.test.js.
+This test mounts a component and makes sure that it didn’t throw during rendering. Tests like this provide a lot of value with very little effort so they are great as a starting point, and this is the test you will find in src/App.test.js.
 
 When you encounter bugs caused by changing components, you will gain a deeper insight into which parts of them are worth testing in your application. This might be a good time to introduce more specific tests asserting specific expected output or behavior.
 
@@ -1013,6 +1071,8 @@ import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
+Note: Keep in mind that if you decide to "eject" before creating src/setupTests.js, the resulting package.json file won't contain any reference to it. Read here to learn how to add this after ejecting.
+
 Now you can write a smoke test with it:
 
 import React from 'react';
@@ -1041,7 +1101,7 @@ it('renders welcome message', () => {
 All Jest matchers are extensively documented here.
 Nevertheless you can use a third-party assertion library like Chai if you want to, as described below.
 
-Additionally, you might find jest-enzyme helpful to simplify your tests with readable matchers. The above contains code can be written simpler with jest-enzyme.
+Additionally, you might find jest-enzyme helpful to simplify your tests with readable matchers. The above contains code can be written more simply with jest-enzyme.
 
 expect(wrapper).toContainReact(welcome)
 To enable this, install jest-enzyme:
@@ -1076,6 +1136,12 @@ const localStorageMock = {
   clear: jest.fn()
 };
 global.localStorage = localStorageMock
+Note: Keep in mind that if you decide to "eject" before creating src/setupTests.js, the resulting package.json file won't contain any reference to it, so you should manually create the property setupTestFrameworkScriptFile in the configuration for Jest, something like the following:
+
+"jest": {
+  // ...
+  "setupTestFrameworkScriptFile": "<rootDir>/src/setupTests.js"
+ }
 Focusing and Excluding Tests
 You can replace it() with xit() to temporarily exclude a test from being executed.
 Similarly, fit() lets you focus on a specific test without running any other tests.
@@ -1150,6 +1216,9 @@ set CI=true&&npm test
 set CI=true&&npm run build
 (Note: the lack of whitespace is intentional.)
 
+Windows (Powershell)
+($env:CI = $true) -and (npm test)
+($env:CI = $true) -and (npm run build)
 Linux, macOS (Bash)
 CI=true npm test
 CI=true npm run build
@@ -1193,6 +1262,55 @@ If you use Visual Studio Code, there is a Jest extension which works with Create
 
 VS Code Jest Preview
 
+Debugging Tests
+There are various ways to setup a debugger for your Jest tests. We cover debugging in Chrome and Visual Studio Code.
+
+Note: debugging tests requires Node 8 or higher.
+
+Debugging Tests in Chrome
+Add the following to the scripts section in your project's package.json
+
+"scripts": {
+    "test:debug": "react-scripts --inspect-brk test --runInBand --env=jsdom"
+  }
+Place debugger; statements in any test and run:
+
+$ npm run test:debug
+This will start running your Jest tests, but pause before executing to allow a debugger to attach to the process.
+
+Open the following in Chrome
+
+about:inspect
+After opening that link, the Chrome Developer Tools will be displayed. Select inspect on your process and a breakpoint will be set at the first line of the react script (this is done simply to give you time to open the developer tools and to prevent Jest from executing before you have time to do so). Click the button that looks like a "play" button in the upper right hand side of the screen to continue execution. When Jest executes the test that contains the debugger statement, execution will pause and you can examine the current scope and call stack.
+
+Note: the --runInBand cli option makes sure Jest runs test in the same process rather than spawning processes for individual tests. Normally Jest parallelizes test runs across processes but it is hard to debug many processes at the same time.
+
+Debugging Tests in Visual Studio Code
+Debugging Jest tests is supported out of the box for Visual Studio Code.
+
+Use the following launch.json configuration file:
+
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug CRA Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",      
+      "args": [
+        "test",
+        "--runInBand",
+        "--no-cache",
+        "--env=jsdom"
+      ],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}
 Developing Components in Isolation
 Usually, in an app, you have a lot of UI components, and each of them has many different states. For an example, a simple button component could have following states:
 
@@ -1248,6 +1366,9 @@ Learn more about React Styleguidist:
 
 GitHub Repo
 Documentation
+Publishing Components to npm
+Create React App doesn't provide any built-in functionality to publish a component to npm. If you're ready to extract a component from your project so other people can use it, we recommend moving it to a separate directory outside of your project and then using a tool like nwb to prepare it for publishing.
+
 Making a Progressive Web App
 By default, the production build is a fully functional, offline-first Progressive Web App.
 
@@ -1307,7 +1428,7 @@ Then to analyze the bundle run the production build then run the analyze script.
 npm run build
 npm run analyze
 Deployment
-npm run build creates a build directory with a production build of your app. Set up your favourite HTTP server so that a visitor to your site is served index.html, and requests to static paths like /static/js/main.<hash>.js are served with the contents of the /static/js/main.<hash>.js file.
+npm run build creates a build directory with a production build of your app. Set up your favorite HTTP server so that a visitor to your site is served index.html, and requests to static paths like /static/js/main.<hash>.js are served with the contents of the /static/js/main.<hash>.js file.
 
 Static Server
 For environments using Node, the easiest way to handle this would be to install serve and let it handle the rest:
@@ -1394,6 +1515,8 @@ This will make sure that all the asset paths are relative to index.html. You wil
 Azure
 See this blog post on how to deploy your React app to Microsoft Azure.
 
+See this blog post or this repo for a way to use automatic deployment to Azure App Service.
+
 Firebase
 Install the Firebase CLI if you haven’t already by running npm install -g firebase-tools. Sign up for a Firebase account and create a new project. Run firebase login and login with your previous created Firebase account.
 
@@ -1431,6 +1554,15 @@ Then run the firebase init command from your project’s root. You need to choos
     i  Writing project information to .firebaserc...
 
     ✔  Firebase initialization complete!
+IMPORTANT: you need to set proper HTTP caching headers for service-worker.js file in firebase.json file or you will not be able to see changes after first deployment (issue #2440). It should be added inside "hosting" key like next:
+
+{
+  "hosting": {
+    ...
+    "headers": [
+      {"source": "/service-worker.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}]}
+    ]
+    ...
 Now, after you create a production build with npm run build, you can deploy it by running firebase deploy.
 
     === Deploying to 'example-app-fd690'...
@@ -1455,9 +1587,12 @@ Step 1: Add homepage to package.json
 The step below is important!
 If you skip it, your app will not deploy correctly.
 
-Open your package.json and add a homepage field:
+Open your package.json and add a homepage field for your project:
 
   "homepage": "https://myusername.github.io/my-app",
+or for a GitHub user page:
+
+  "homepage": "https://myusername.github.io",
 Create React App uses the homepage field to determine the root URL in the built HTML file.
 
 Step 2: Install gh-pages and add deploy to scripts in package.json
@@ -1478,6 +1613,14 @@ Add the following scripts in your package.json:
     "build": "react-scripts build",
 The predeploy script will run automatically before deploy is run.
 
+If you are deploying to a GitHub user page instead of a project page you'll need to make two additional modifications:
+
+First, change your repository's source branch to be any branch other than master.
+Additionally, tweak your package.json scripts to push deployments to master:
+  "scripts": {
+    "predeploy": "npm run build",
+-   "deploy": "gh-pages -d build",
++   "deploy": "gh-pages -b master -d build",
 Step 3: Deploy the site by running npm run deploy
 Then run:
 
@@ -1495,6 +1638,13 @@ GitHub Pages doesn’t support routers that use the HTML5 pushState history API 
 
 You could switch from using HTML5 history API to routing with hashes. If you use React Router, you can switch to hashHistory for this effect, but the URL will be longer and more verbose (for example, http://user.github.io/todomvc/#/todos/42?_k=yknaj). Read more about different history implementations in React Router.
 Alternatively, you can use a trick to teach GitHub Pages to handle 404 by redirecting to your index.html page with a special redirect parameter. You would need to add a 404.html file with the redirection code to the build folder before deploying your project, and you’ll need to add code handling the redirect parameter to index.html. You can find a detailed explanation of this technique in this guide.
+Troubleshooting
+"/dev/tty: No such a device or address"
+If, when deploying, you get /dev/tty: No such a device or address or a similar error, try the follwing:
+
+Create a new Personal Access Token
+git remote set-url origin https://<user>:<token>@github.com/<user>/<repo> .
+Try npm run deploy again
 Heroku
 Use the Heroku Buildpack for Create React App.
 You can find instructions in Deploying React with Zero Configuration.
@@ -1526,7 +1676,7 @@ In this case, ensure that the file is there with the proper lettercase and that�
 Netlify
 To do a manual deploy to Netlify’s CDN:
 
-npm install netlify-cli
+npm install netlify-cli -g
 netlify deploy
 Choose build as the path to deploy.
 
@@ -1536,7 +1686,8 @@ With this setup Netlify will build and deploy when you push to git or open a pul
 
 Start a new netlify project
 Pick your Git hosting service and select your repository
-Click Build your site
+Set yarn build as the build command and build as the publish directory
+Click Deploy site
 Support for client-side routing:
 
 To support pushState, make sure to create a public/_redirects file with the following rewrite rules:
@@ -1574,16 +1725,17 @@ Note that in order to support routers that use HTML5 pushState API, you may want
 Advanced Configuration
 You can adjust various development and production settings by setting environment variables in your shell or with .env.
 
-Variable	Development	Production	Usage
-BROWSER	✅	❌	By default, Create React App will open the default system browser, favoring Chrome on macOS. Specify a browser to override this behavior, or set it to none to disable it completely. If you need to customize the way the browser is launched, you can specify a node script instead. Any arguments passed to npm start will also be passed to this script, and the url where your app is served will be the last argument. Your script's file name must have the .js extension.
-HOST	✅	❌	By default, the development web server binds to localhost. You may use this variable to specify a different host.
-PORT	✅	❌	By default, the development web server will attempt to listen on port 3000 or prompt you to attempt the next available port. You may use this variable to specify a different port.
-HTTPS	✅	❌	When set to true, Create React App will run the development server in https mode.
-PUBLIC_URL	❌	✅	Create React App assumes your application is hosted at the serving web server's root or a subpath as specified in package.json (homepage). Normally, Create React App ignores the hostname. You may use this variable to force assets to be referenced verbatim to the url you provide (hostname included). This may be particularly useful when using a CDN to host your application.
-CI	🔶	✅	When set to true, Create React App treats warnings as failures in the build. It also makes the test runner non-watching. Most CIs set this flag by default.
-REACT_EDITOR	✅	❌	When an app crashes in development, you will see an error overlay with clickable stack trace. When you click on it, Create React App will try to determine the editor you are using based on currently running processes, and open the relevant source file. You can send a pull request to detect your editor of choice. Setting this environment variable overrides the automatic detection. If you do it, make sure your systems PATH environment variable points to your editor’s bin folder.
-CHOKIDAR_USEPOLLING	✅	❌	When set to true, the watcher runs in polling mode, as necessary inside a VM. Use this option if npm start isn't detecting changes.
-GENERATE_SOURCEMAP	❌	✅	When set to false, source maps are not generated for a production build. This solves OOM issues on some smaller machines.
+Variable  Development Production  Usage
+BROWSER ✅ ❌ By default, Create React App will open the default system browser, favoring Chrome on macOS. Specify a browser to override this behavior, or set it to none to disable it completely. If you need to customize the way the browser is launched, you can specify a node script instead. Any arguments passed to npm start will also be passed to this script, and the url where your app is served will be the last argument. Your script's file name must have the .js extension.
+HOST  ✅ ❌ By default, the development web server binds to localhost. You may use this variable to specify a different host.
+PORT  ✅ ❌ By default, the development web server will attempt to listen on port 3000 or prompt you to attempt the next available port. You may use this variable to specify a different port.
+HTTPS ✅ ❌ When set to true, Create React App will run the development server in https mode.
+PUBLIC_URL  ❌ ✅ Create React App assumes your application is hosted at the serving web server's root or a subpath as specified in package.json (homepage). Normally, Create React App ignores the hostname. You may use this variable to force assets to be referenced verbatim to the url you provide (hostname included). This may be particularly useful when using a CDN to host your application.
+CI  🔶 ✅ When set to true, Create React App treats warnings as failures in the build. It also makes the test runner non-watching. Most CIs set this flag by default.
+REACT_EDITOR  ✅ ❌ When an app crashes in development, you will see an error overlay with clickable stack trace. When you click on it, Create React App will try to determine the editor you are using based on currently running processes, and open the relevant source file. You can send a pull request to detect your editor of choice. Setting this environment variable overrides the automatic detection. If you do it, make sure your systems PATH environment variable points to your editor’s bin folder. You can also set it to none to disable it completely.
+CHOKIDAR_USEPOLLING ✅ ❌ When set to true, the watcher runs in polling mode, as necessary inside a VM. Use this option if npm start isn't detecting changes.
+GENERATE_SOURCEMAP  ❌ ✅ When set to false, source maps are not generated for a production build. This solves OOM issues on some smaller machines.
+NODE_PATH ✅ ✅ Same as NODE_PATH in Node.js, but only relative folders are allowed. Can be handy for emulating a monorepo setup by setting NODE_PATH=src.
 Troubleshooting
 npm start doesn’t detect changes
 When you save a file while npm start is running, the browser should refresh with the updated code.
@@ -1658,5 +1810,8 @@ If the dependency is small enough, copy it to your src/ folder and treat it as a
 
 In the future, we might start automatically compiling incompatible third-party modules, but it is not currently supported. This approach would also slow down the production builds.
 
+Alternatives to Ejecting
+Ejecting lets you customize anything, but from that point on you have to maintain the configuration and scripts yourself. This can be daunting if you have many similar projects. In such cases instead of ejecting we recommend to fork react-scripts and any other packages you need. This article dives into how to do it in depth. You can find more discussion in this issue.
+
 Something Missing?
-If you have ideas for more “How To” recipes that should be on this page, let us know or contribute some!
+If you have ideas for more “How To” recipes that should be on this page, let us know or contribute some! "19.7"
