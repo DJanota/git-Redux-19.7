@@ -1814,4 +1814,4 @@ Alternatives to Ejecting
 Ejecting lets you customize anything, but from that point on you have to maintain the configuration and scripts yourself. This can be daunting if you have many similar projects. In such cases instead of ejecting we recommend to fork react-scripts and any other packages you need. This article dives into how to do it in depth. You can find more discussion in this issue.
 
 Something Missing?
-If you have ideas for more “How To” recipes that should be on this page, let us know or contribute some! "19.7"
+If you have ideas for more “How To” recipes that should be on this page, let us know or contribute some! "19.7 "
